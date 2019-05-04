@@ -1,0 +1,36 @@
+<%- include layout.ejs %>
+<style>
+	table{
+		text-align: center;
+	}
+</style>
+<table width="100%">
+  	<thead>
+  		<tr>
+  			<th> Email </th>
+  			<th> Action </th>
+  		</tr>
+  	</thead>
+  	<tbody>
+  		<% if (data) { %>
+  			<% data.forEach(function(row){ %>
+				<tr>
+					<td><%= row.email %></td>
+					<td>
+						<a href='/users/edit/<%= row.id %>'>Edit</a>
+						<a href='/users/update-status/<%= row.id %>' class='update-status'>Status</a>
+					</td>
+				</tr>
+			<% }) %>
+		<% } %>
+	</tbody>
+</table>
+	<scripts src='/plugins/sweetalert/sweetalert.min.js'></scripts>
+	<script src='/scripts/user_list.js'></script>
+<script>
+	var objUser = new User();
+	jQuery(document).ready(function(){
+		objUser.init();
+	});
+</script>
+<%- include footer.ejs %>
