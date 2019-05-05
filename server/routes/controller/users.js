@@ -1,8 +1,8 @@
 var express = require('express');
 var router = express.Router();
 var createError = require('http-errors');
-var crypto = require('crypto');
 var Files = require('../../helpers/Files');
+var Helpers = require('../../helpers/Helpers');
 var objUserModel = require('../model/user_model');
 var objLoginTokenModel = require('../model/login_token_model');
 const fs = require('fs')
@@ -57,11 +57,15 @@ router.post('/login', function(req, res, next) {
 			objUserModel.getQuery('SELECT id, email, image FROM users where email = "'+email+'" and password = "'+password+'" limit 1', conn).then(function(rows){
 
 				if(rows.length == 1){
-					var current_date = (new Date()).valueOf().toString();
-					var random = Math.random().toString();
-					var hash = crypto.createHash('sha1').update(current_date + random).digest('hex');
-
+//					var current_date = (new Date()).valueOf().toString();
+//					var random = Math.random().toString();
+//					var hash = crypto.createHash('sha1').update(current_date + random).digest('hex');
+//
 					var user_id = rows[0].id;
+//					var token = jwt.sign({user_id:user_id}, key.key);
+					var token = Helpers.createToken({user_id:user_id});
+
+					var hash = Helpers.encrypt(token);
 
 					var objExpiryDate = new Date();
 					objExpiryDate.setDate(objExpiryDate.getDate() + 1);
@@ -74,7 +78,7 @@ router.post('/login', function(req, res, next) {
 					expiryDate += ':'+objExpiryDate.getSeconds();
 
 					var query = conn.query('delete from login_tokens where user_id = '+user_id+'');
-					objLoginTokenModel.create({"user_id":user_id, "token":hash, "expiry_date" : expiryDate},conn).then(function(results){
+					objLoginTokenModel.create({"user_id":user_id, "token":token, "expiry_date" : expiryDate},conn).then(function(results){
 						return res.status(200).send({
 							success: true,
 							message: "Login successfully",

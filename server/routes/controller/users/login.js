@@ -1,4 +1,7 @@
 var router = express.Router();
+const jwt = require('jsonwebtoken');
+const key = require('../../keys/public');
+
 var UserLogin = function(req, res, next) {
 	req.getConnection(function(error, conn) {
 		if(error){
@@ -37,11 +40,14 @@ var UserLogin = function(req, res, next) {
 
 					conn.query('SELECT id, email, image FROM users where email = "'+email+'" and password = "'+password+'" limit 1',function(err, rows, fields) {
 						if(rows.length == 1){
-							var current_date = (new Date()).valueOf().toString();
-							var random = Math.random().toString();
-							var hash = crypto.createHash('sha1').update(current_date + random).digest('hex');
+//							var current_date = (new Date()).valueOf().toString();
+//							var random = Math.random().toString();
+//							var hash = crypto.createHash('sha1').update(current_date + random).digest('hex');
 
 							var user_id = rows[0].id;
+
+							var token = jwt.sign({user_id:user_id},key.key);
+							console.log(":Asdsad")
 
 							var query = conn.query('delete from login_tokens where user_id = '+user_id+'');
 							var query = conn.query('insert into login_tokens (user_id, token) values ('+user_id+', "'+hash+'")');
@@ -50,7 +56,7 @@ var UserLogin = function(req, res, next) {
 							return res.status(200).send({
 								success: true,
 								message: "Login successfully",
-								token: hash,
+								token: token,
 								data: rows[0],
 							});
 						}else{

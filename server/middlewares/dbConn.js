@@ -12,7 +12,6 @@ var dbConnection = function(req, res, next){
 			console.error('error connecting: ' + err.stack);
 			return;
 		}
-		console.log('connected as id ' + connection.threadId);
 		req.objConnection = connection;
 		next();
 	});
