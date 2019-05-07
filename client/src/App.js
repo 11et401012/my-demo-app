@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
-import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import jwt_decode from 'jwt-decode';
 import setAuthToken from './setAuthToken';
 import store from './store'
@@ -8,6 +8,8 @@ import { setCurrentUser, logoutUser } from './actions/authentication';
 import { Provider } from 'react-redux'
 import Login from './components/login';
 import Home from './components/home';
+import UserList from './components/users/list';
+import NoMatch from './components/404';
 
 if (localStorage.jwtToken !== 'undefined' && localStorage.jwtToken !== undefined) {
 		setAuthToken(localStorage.jwtToken);
@@ -28,12 +30,17 @@ if (localStorage.jwtToken !== 'undefined' && localStorage.jwtToken !== undefined
 class App extends Component {
 		render() {
 				return (
-						<Provider store={store}>
-								<Router>
-									<Route exact path="/login" component={ Login } />
-									<Route exact path="/" component={ Home } />
-								</Router>
-						</Provider>
+					<Provider store={store}>
+						<Router>
+							<Switch>
+								<Route exact path="/login" component={ Login } />
+								<Home>
+									<Route exact path="/users/list" component={ UserList } />
+									<Route component={ NoMatch } />
+								</Home>
+							</Switch>
+						</Router>
+					</Provider>
 				);
 		}
 }

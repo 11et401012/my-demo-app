@@ -10,7 +10,7 @@ class Home extends Component {
     render() {
         return (
             <div id="wrapper">
-                <Navigation />
+                <Navigation path={this.props.location.pathname}/>
                 <div id="page-wrapper" className="gray-bg dashbard-1">
                     <Header />
                         <div className="row">
