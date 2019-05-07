@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import Navigation from './components/layouts/navigation';
 import './App.css';
 import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
 import jwt_decode from 'jwt-decode';
@@ -8,8 +7,9 @@ import store from './store'
 import { setCurrentUser, logoutUser } from './actions/authentication';
 import { Provider } from 'react-redux'
 import Login from './components/login';
+import Home from './components/home';
 
-if (localStorage.jwtToken) {
+if (localStorage.jwtToken !== 'undefined' && localStorage.jwtToken !== undefined) {
 		setAuthToken(localStorage.jwtToken);
 		const decoded = jwt_decode(localStorage.jwtToken);
 		store.dispatch(setCurrentUser(decoded));
@@ -27,24 +27,12 @@ if (localStorage.jwtToken) {
 
 class App extends Component {
 		render() {
-				const hideClass = this.props.isAuthenticated ? '' : 'hide';
 				return (
 						<Provider store={store}>
 								<Router>
-										<Route exact path="/login" component={ Login } />
+									<Route exact path="/login" component={ Login } />
+									<Route exact path="/" component={ Home } />
 								</Router>
-								<div id="wrapper" className={hideClass}>
-										<Navigation />
-										<div id="page-wrapper" className="gray-bg dashbard-1">
-												<div className="row">
-														<div className="col-lg-12">
-																<div className="wrapper wrapper-content animated fadeInRight">
-
-																</div>
-														</div>
-												</div>
-										</div>
-								</div>
 						</Provider>
 				);
 		}

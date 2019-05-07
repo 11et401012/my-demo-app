@@ -36,7 +36,7 @@ router.post('/login', function(req, res, next) {
 
 	if(data == undefined){
 		return res.status(200).send({
-	      success: false,
+			status: false,
 	      message: "Email, Password fields are required."
 	    });
 	}else{
@@ -48,7 +48,7 @@ router.post('/login', function(req, res, next) {
 
 		if(diff.length){
 			return res.status(200).send({
-				success: false,
+				status: false,
 				message: diff.join(', ')+" fields are required.",
 			});
 		}else{
@@ -65,7 +65,7 @@ router.post('/login', function(req, res, next) {
 //					var token = jwt.sign({user_id:user_id}, key.key);
 					var token = Helpers.createToken({user_id:user_id});
 
-					var hash = Helpers.encrypt(token);
+//					var hash = Helpers.encrypt(token);
 
 					var objExpiryDate = new Date();
 					objExpiryDate.setDate(objExpiryDate.getDate() + 1);
@@ -80,15 +80,15 @@ router.post('/login', function(req, res, next) {
 					var query = conn.query('delete from login_tokens where user_id = '+user_id+'');
 					objLoginTokenModel.create({"user_id":user_id, "token":token, "expiry_date" : expiryDate},conn).then(function(results){
 						return res.status(200).send({
-							success: true,
+							status: true,
 							message: "Login successfully",
-							token: hash,
+							token: token,
 							data: rows[0],
 						});
 					})
 					.catch(function(err){
 						return res.status(200).send({
-							success: false,
+							status: false,
 							message: err.stack,
 							token: '',
 							data: {},
@@ -96,14 +96,14 @@ router.post('/login', function(req, res, next) {
 					});
 				}else{
 					return res.status(200).send({
-						success: false,
+						status: false,
 						message: "Login unsuccessfully"
 					});
 				}
 			})
 			.catch(function(err){
 				return res.status(200).send({
-					success: false,
+					status: false,
 					message: err.stack,
 					token: '',
 					data: {},
@@ -138,14 +138,14 @@ router.post('/get', function(req, res, next) {
 
 	objUserModel.getData(fields, where, start, limit, orderBy, conn).then(function(results){
 		return res.status(200).send({
-			success : true,
+			status : true,
 			message : "data get successfully.",
 			data 	: results,
 		});
 	})
 	.catch(function(err){
 		return res.status(200).send({
-			success: false,
+			status: false,
 			message: err.stack,
 			data: {},
 		});
@@ -166,13 +166,13 @@ router.post('/update/:id', function(req, res, next) {
 
 	objUserModel.updateData(fields, where, conn).then(function(results){
 		return res.status(200).send({
-			success : true,
+			status : true,
 			message : "data updated successfully.",
 		});
 	})
 	.catch(function(err){
 		return res.status(200).send({
-			success: false,
+			status: false,
 			message: err.stack,
 		});
 	});
@@ -226,7 +226,7 @@ router.post('/upload_image', function(req, res, next) {
 		objUserModel.getQuery('update users set image = "'+imageName+'" where id = '+user_id, connection).then(function(rows){
 			if(rows && rows.affectedRows){
 				return res.status(200).send({
-					success : true,
+					status : true,
 					message: 'file uploaded successfully',
 					path : host + "/uploads/"+imageName,
 					thumb_path : host + "/uploads/"+thumbImageName,
@@ -234,14 +234,14 @@ router.post('/upload_image', function(req, res, next) {
 			}else{
 				Files.remove(newImagePath);
 				return res.status(200).send({
-					success : true,
+					status : true,
 					message : "No user found"
 				});
 			}
 		})
 		.catch(function(err){
 			return res.status(200).send({
-				success: false,
+				status: false,
 				message: err.stack,
 			});
 		});

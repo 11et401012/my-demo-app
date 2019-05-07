@@ -15,20 +15,36 @@ export const registerUser = (user, history) => dispatch => {
 }
 
 export const loginUser = (user) => dispatch => {
-    axios.post('/api/users/login', user)
-            .then(res => {
+    axios({
+        url: 'http://127.0.0.1:3001/users/login', 
+        data: user,
+        method: 'post',
+        headers: {
+            'content-type': 'application/json'
+        }
+    })
+    .then(res => {
+            if(res.data.status){
                 const { token } = res.data;
                 localStorage.setItem('jwtToken', token);
                 setAuthToken(token);
                 const decoded = jwt_decode(token);
+                console.log(decoded)
                 dispatch(setCurrentUser(decoded));
-            })
-            .catch(err => {
+            }else{
                 dispatch({
                     type: GET_ERRORS,
-                    payload: err.response.data
-                });
+                    payload: res.data.message
+                });    
+            }
+        })
+        .catch(err => {
+            console.log(err)
+            dispatch({
+                type: GET_ERRORS,
+                payload: err
             });
+        });
 }
 
 export const setCurrentUser = decoded => {
