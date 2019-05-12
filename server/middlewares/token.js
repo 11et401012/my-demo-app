@@ -5,6 +5,7 @@ var tokenMiddleware = function (req, res, next) {
 
 	//get headers
 	var headers = req.headers;
+	console.log(headers);
 
 	//get current urls
 	var url = req.originalUrl;
@@ -21,14 +22,16 @@ var tokenMiddleware = function (req, res, next) {
 
 		//if token has not been blank
 		if(token){
-			token = Helpers.decrypt(token);
+//			token = Helpers.decrypt(token);
 			var user_id = 0;
 			var token = Helpers.verifyToken(token);
 
 			token.then(function(payload){
+				console.log(payload)
 				req.user_id = payload.user_id;
 				next();
 			}).catch(function(err){
+				console.log(err)
 				return res.status(200).send({
 					success: false,
 					message: err.message

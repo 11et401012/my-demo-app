@@ -24,21 +24,22 @@ export default class navigation extends Component {
                                 IN+
                             </div>
                         </li>
-                        <li className={this.props.path.match('users') ? 'active' : ''}>
-                            <a>
+                        <li className={(window.location.pathname).match('users') ? 'active' : ''}>
+                            <NavLink exact to="/users/list">
                                 <i className="fa fa-user"></i> 
                                 <span className="nav-label">Users</span> 
-                                <span className="fa arrow"></span></a>
+                                <span className="fa arrow"></span>
+                            </NavLink>
                             <ul className="nav nav-second-level">
-                                <li className="active">
+                                <li className={window.location.pathname == '/users/list' ? 'active' : ''}>
                                     <NavLink exact to="/users/list">List</NavLink>
                                 </li>
-                                <li>
+                                <li className={window.location.pathname == '/users/add' ? 'active' : ''}>
                                     <NavLink exact to="/users/add">Add</NavLink>
                                 </li>
                             </ul>
                         </li>
-                        <li className={this.props.path.match('change-password') ? 'active' : ''}>
+                        <li className={(window.location.href).match('change-password') ? 'active' : ''}>
                             <a>
                                 <i className="fa fa-key"></i> 
                                 <span className="nav-label">Change Password</span>

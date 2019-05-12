@@ -1,6 +1,4 @@
-import React, { Component } from 'react'
-import Navigation from './layouts/navigation';
-import Header from './layouts/header';
+import React, { Component } from 'react';
 
 class page_404 extends Component {
     render() {

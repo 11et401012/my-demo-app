@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { loginUser } from '../actions/authentication';
+import {Redirect} from 'react-router-dom';
 
 class Login extends Component {
     constructor() {
@@ -32,15 +33,16 @@ class Login extends Component {
 
 
     componentDidMount() {
-        console.log(this.props.auth.isAuthenticated)
         if(this.props.auth.isAuthenticated) {
-            this.props.history.push('/');
+            // this.props.history.push('/users/list');
+            window.location.href='/users/list';
         }
     }
 
     componentWillReceiveProps(nextProps) {
         if(nextProps.auth.isAuthenticated) {
-            this.props.history.push('/')
+            // this.props.history.push('/users/list')
+            window.location.href='/users/list';
         }
         if(nextProps.errors) {
             this.setState({

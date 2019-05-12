@@ -11,6 +11,7 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/controller/users');
 var app = express();
 const fileUpload = require('express-fileupload');
+const cors = require("cors");
 
 // view engine setup
 //app.set('views', path.join(__dirname, 'views'));
@@ -37,7 +38,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 //Parse incoming requests data
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 var db = require('./middlewares/dbConn');
 app.use(db);
@@ -45,11 +46,18 @@ app.use(db);
 var myLogger = require('./middlewares/token');
 app.use(myLogger);
 
+app.use(cors({ origin: true }));
+//main.use(cors({ origin: true }));
+
 app.use(function(req, res, next) {
-	res.setHeader("Access-Control-Allow-Origin", "*");
-	res.setHeader("Access-Control-Allow-Credentials", "true");
-	res.setHeader("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
-	res.setHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
+	res.set("Access-Control-Allow-Origin", "*");
+	res.set("Access-Control-Expose-Headers", "*");
+	res.set("Access-Control-Allow-Credentials", "true");
+	res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
+	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization, access-control-allow-origin");
+//	res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type, test');
+	console.log(req.headers);
+//
     next()
 });
 

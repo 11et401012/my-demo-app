@@ -47,6 +47,23 @@ export const loginUser = (user) => dispatch => {
         });
 }
 
+export const getUserData = (user) => dispatch => {
+    axios({
+        url: 'http://127.0.0.1:3001/users/list', 
+        method: 'post',
+        headers: {
+            'content-type': 'application/json',
+            'Authorization': 'adadadadasd'
+        }
+    })
+    .then(res => {
+           console.log(res)
+        })
+        .catch(err => {
+            console.log(err)
+        });
+}
+
 export const setCurrentUser = decoded => {
     return {
         type: SET_CURRENT_USER,
