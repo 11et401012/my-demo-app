@@ -48,12 +48,13 @@ export const loginUser = (user) => dispatch => {
 }
 
 export const getUserData = (user) => dispatch => {
+    let token= localStorage.getItem('jwtToken')
     axios({
         url: 'http://127.0.0.1:3001/users/list', 
         method: 'post',
         headers: {
             'content-type': 'application/json',
-            'Authorization': 'adadadadasd'
+            'Authorization': 'Bearer '+ token ;
         }
     })
     .then(res => {
